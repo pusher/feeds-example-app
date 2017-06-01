@@ -41,14 +41,14 @@ app.get("/notes/:user_id", (req, res) => {
   req.session.userId = req.params.user_id;
   // Hacky templating to embed the user ID
   fs.readFile("notes.html", "utf8", (err, data) => {
-    data = data.replace("$USER_ID", req.params.user_id);
+    data = data.replace(/\$USER_ID/g, req.params.user_id);
     res.type('html');
     res.send(data);
   });
 });
 
 app.post("/newsfeed", (req, res) => {
-  feeds.publish("newsfeed", req.body);
+  feeds.publish("newsfeed", [ req.body.item_data ]);
 });
 
 app.post("/notes/:user_id", (req, res) => {
