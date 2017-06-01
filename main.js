@@ -37,7 +37,6 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/notes/:user_id", (req, res) => {
-  req.session.userId = req.params.user_id;
   // Hacky templating to embed the user ID
   fs.readFile("notes.html", "utf8", (err, data) => {
     data = data.replace(/\$USER_ID/g, req.params.user_id);
