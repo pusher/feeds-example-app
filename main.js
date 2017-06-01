@@ -1,5 +1,5 @@
 const express = require("express");
-const session = require("express-sesison");
+const session = require("express-session");
 const bodyParser = require("body-parser");
 const Feeds = require("./pusher-feeds-server");
 
@@ -12,20 +12,21 @@ function hasPermission(userId, feedId) {
   if (userId === "admin") {
     return true;
   }
-  return `private-${userId}` === feedId);
+  return `private-${userId}` === feedId;
 }
 
 const app = express();
 app.use(session({ secret: "blah" }));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 app.get("/", (req, res) => {
-  res.sendFile("login.html");
+  res.sendFile(__dirname + "/login.html");
 });
 
-app.get("/notes/:user_id", (req, res) => {
-  req.session.userId = req.params.user_id;
-  res.sendFile("notes.html");
+app.get("/notes", (req, res) => {
+  req.session.userId = req.body.user_id;
+  res.sendFile(__dirname + "/notes.html");
 });
 
 app.post("/newsfeed", (req, res) => {
