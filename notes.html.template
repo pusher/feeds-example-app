@@ -7,20 +7,23 @@
   <script src="/pusher-feeds-client.js"></script>
   <script>
 function publishToNewsfeed(oFormElement) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function(){ console.log("published!"); }
-  xhr.open ("POST", "/newsfeed", true);
+  const xhr = new XMLHttpRequest();
+  xhr.onload = () => console.log("published!");
+  xhr.open("POST", "/newsfeed", true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send (JSON.stringify({"item_data": document.getElementById("newsfeed_data").value}));
-  return false;
+  xhr.send(JSON.stringify({
+    item_data: document.getElementById("newsfeed_data").value
+  }));
 }
 
 function publishToNotes(oFormElement) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function(){ console.log("published!"); }
-  xhr.open ("POST", "/notes/$USER_ID", true);
+  const xhr = new XMLHttpRequest();
+  xhr.onload = () => console.log("published!");
+  xhr.open ("POST", "/notes/$NOTE_ID", true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send (JSON.stringify({"item_data": document.getElementById("data").value}));
+  xhr.send(JSON.stringify({
+    item_data: document.getElementById("data").value
+  }));
   return false;
 }
 
@@ -29,13 +32,13 @@ const feeds = new PusherFeeds({
   host: "api-staging-ceres.kube.pusherplatform.io"
 });
 
-feeds.subscribe("newsfeed", {tailSize: 10, onEvent: item => {
+feeds.subscribe("newsfeed", { tailSize: 10, onEvent: item => {
   const itemEl = document.createElement("li")
   itemEl.textContent = item.data;
   document.getElementById("newsfeed").prepend(itemEl);
 }});
 
-feeds.subscribe("private-$USER_ID", {tailSize: 10, onEvent: item => {
+feeds.subscribe("private-$NOTE_ID", { tailSize: 10, onEvent: item => {
   const itemEl = document.createElement("li")
   itemEl.textContent = item.data;
   document.getElementById("notes").prepend(itemEl);
@@ -44,6 +47,7 @@ feeds.subscribe("private-$USER_ID", {tailSize: 10, onEvent: item => {
 </head>
 
 <body>
+  <div>Logged in as: $USER_ID</div>
   <div style="border-style: solid; width: 49%; float: left">
     <div>
       <input id="newsfeed_data" type="text" name="item_data">

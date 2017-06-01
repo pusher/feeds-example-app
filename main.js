@@ -2,6 +2,7 @@ const fs = require("fs");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+
 const Feeds = require("./pusher-feeds-server");
 
 const feeds = new Feeds({
@@ -9,39 +10,29 @@ const feeds = new Feeds({
   appKey: "the-id-bit:the-secret-bit",
   host: "api-staging-ceres.kube.pusherplatform.io"
 });
-console.log(`Server token: ${feeds.token}`);
 
 function hasPermission(userId, feedId) {
-  if (userId === "admin") {
-    return true;
-  }
-  return `private-${userId}` === feedId;
+  return userId === "big-brother" || feedId === `private-${userId}`;
 }
 
 const app = express();
-app.use(session({ secret: "blah" }));
+app.use(express.static("static"));
+app.use(session({ secret: "HvCYzkbSjv3hNUf3fetPChO7DNxNPuOB" }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-
-app.get("/pusher-feeds-client.js", (req, res) => {
-  res.sendFile(__dirname + "/pusher-feeds-client.js");
-});
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/login.html");
-});
+app.use(bodyParser.urlencoded()); // TODO can probably remove?
 
 app.get("/login", (req, res) => {
   req.session.userId = req.query.user_id;
   res.redirect(`/notes/${req.query.user_id}`);
 });
 
-app.get("/notes/:user_id", (req, res) => {
+app.get("/notes/:note_id", (req, res) => {
   // Hacky templating to embed the user ID
-  fs.readFile("notes.html", "utf8", (err, data) => {
-    data = data.replace(/\$USER_ID/g, req.params.user_id);
-    res.type('html');
-    res.send(data);
+  fs.readFile("notes.html.template", "utf8", (err, data) => {
+    html = data.replace(/\$NOTE_ID/g, req.params.note_id)
+      .replace(/\$USER_ID/g, req.session.userId);
+    res.type("html");
+    res.send(html);
   });
 });
 
@@ -62,12 +53,10 @@ app.post("/notes/:user_id", (req, res) => {
 
 app.get("/feeds/tokens", (req, res) => {
   feeds.authorize(req, res, {}, (feedId, type) => {
-    if (type !== "READ") {
-      return false;
-    }
-    return hasPermission(req.session.userId, feedId);
+    return type === "READ" && hasPermission(req.session.userId, feedId);
   });
 });
 
-app.listen(5000);
-console.log(`Listening on port 5000`);
+const port = process.env.PORT || 5000;
+app.listen(port);
+console.log(`Listening on port ${port}`);
