@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>1984 Notes</title>
+  <script src="/pusher-feeds-client.js"></script>
   <script>
 function submitForm(oFormElement) {
   var xhr = new XMLHttpRequest();
@@ -12,6 +13,11 @@ function submitForm(oFormElement) {
   xhr.send (new FormData (oFormElement));
   return false;
 }
+
+const feeds = new PusherFeeds({
+  appId: "auth-example-app",
+  host: "api-staging-ceres.kube.pusherplatform.io"
+});
 </script>
 </head>
 

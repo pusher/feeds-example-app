@@ -6,10 +6,13 @@ const Feeds = require("./pusher-feeds-server");
 
 const feeds = new Feeds({
   appId: "auth-example-app",
-  appKey: "the-id-bit:the-secret-bit"
+  appKey: "the-id-bit:the-secret-bit",
+  host: "api-staging-ceres.kube.pusherplatform.io"
 });
+console.log(`Server token: ${feeds.token}`);
 
 function hasPermission(userId, feedId) {
+  console.log(`hasPermission(${userId}, ${feedId}) called`);
   if (userId === "admin") {
     return true;
   }
@@ -20,6 +23,10 @@ const app = express();
 app.use(session({ secret: "blah" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+
+app.get("/pusher-feeds-client.js", (req, res) => {
+  res.sendFile(__dirname + "/pusher-feeds-client.js");
+});
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/login.html");
@@ -47,7 +54,7 @@ app.post("/newsfeed", (req, res) => {
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
   if (hasPermission(req.session.userId, feedId)) {
-    feeds.publish(feedId, req.body.item_data);
+    feeds.publish(feedId, [ req.body.item_data ]);
     res.sendStatus(204)
   } else {
     res.sendStatus(401)
@@ -55,11 +62,11 @@ app.post("/notes/:user_id", (req, res) => {
 });
 
 app.get("/feeds/tokens", (req, res) => {
-  feeds.authorize(req, res, (feedId, type) => {
-    if (type !== 'WRITE') {
+  feeds.authorize(req, res, {}, (feedId, type) => {
+    if (type !== "READ") {
       return false;
     }
-    return hasPermission(session.userId, feedId);
+    return hasPermission(req.session.userId, feedId);
   });
 });
 
