@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>1984 Notes</title>
+  <script>
+function submitForm(oFormElement) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function(){ console.log("published!"); }
+  xhr.open (oFormElement.method, oFormElement.action, true);
+  xhr.send (new FormData (oFormElement));
+  return false;
+}
+</script>
+</head>
+
+<body>
+  <div style="border-style: solid;">
+    <form method="POST" action="/notes/$USER_ID" onsubmit="submitForm(this);" >
+      <input type="text" name="item_data">
+      <br/>
+      <input type="submit">
+    </form>
+
+  </div>
+  <div style="border-style: solid;">
+
+  </div>
+</body>
+</html>
