@@ -1,3 +1,4 @@
+const fs = require("fs");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
@@ -24,9 +25,19 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/login.html");
 });
 
-app.get("/notes", (req, res) => {
-  req.session.userId = req.body.user_id;
-  res.sendFile(__dirname + "/notes.html");
+app.get("/login", (req, res) => {
+  req.session.userId = req.query.user_id;
+  res.redirect(`/notes/${req.query.user_id}`);
+});
+
+app.get("/notes/:user_id", (req, res) => {
+  req.session.userId = req.params.user_id;
+  // Hacky templating to embed the user ID
+  fs.readFile("notes.html", "utf8", (err, data) => {
+    data = data.replace("$USER_ID", req.params.user_id);
+    res.type('html');
+    res.send(data);
+  });
 });
 
 app.post("/newsfeed", (req, res) => {
@@ -36,7 +47,8 @@ app.post("/newsfeed", (req, res) => {
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
   if (hasPermission(req.session.userId, feedId)) {
-    feeds.publish(feedId, req.body);
+    feeds.publish(feedId, req.body.item_data);
+    res.sendStatus(204)
   } else {
     res.sendStatus(401)
   }
