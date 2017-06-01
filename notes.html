@@ -9,8 +9,9 @@
 function submitForm(oFormElement) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function(){ console.log("published!"); }
-  xhr.open (oFormElement.method, oFormElement.action, true);
-  xhr.send (new FormData (oFormElement));
+  xhr.open ("POST", "/notes/$USER_ID", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send (JSON.stringify({"item_data": document.getElementById("data").value}));
   return false;
 }
 
@@ -18,17 +19,27 @@ const feeds = new PusherFeeds({
   appId: "auth-example-app",
   host: "api-staging-ceres.kube.pusherplatform.io"
 });
+
+const notesEl = document.getElementById("notes");
+feeds.subscribe("private-will", {tailSize: 10, onEvent: item => {
+  const itemEl = document.createElement("li")
+  itemEl.textContent = item.data;
+  notes.prepend(itemEl);
+}});
 </script>
 </head>
 
 <body>
   <div style="border-style: solid;">
-    <form method="POST" action="/notes/$USER_ID" onsubmit="submitForm(this);" >
-      <input type="text" name="item_data">
+    <form>
+      <input id="data" type="text" name="item_data">
       <br/>
-      <input type="submit">
+      <button type="button" name="publish" onclick="submitForm(this)">Publish!</button>
     </form>
-
+    <div>
+      <ul id="notes">
+      </ul>
+    </div>
   </div>
   <div style="border-style: solid;">
 

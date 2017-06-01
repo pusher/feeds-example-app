@@ -53,6 +53,7 @@ app.post("/newsfeed", (req, res) => {
 
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
+  console.log(req.body);
   if (hasPermission(req.session.userId, feedId)) {
     feeds.publish(feedId, [ req.body.item_data ]);
     res.sendStatus(204)
