@@ -29,33 +29,38 @@ const feeds = new PusherFeeds({
   host: "api-staging-ceres.kube.pusherplatform.io"
 });
 
-const notesEl = document.getElementById("notes");
+feeds.subscribe("newsfeed", {tailSize: 10, onEvent: item => {
+  const itemEl = document.createElement("li")
+  itemEl.textContent = item.data;
+  document.getElementById("newsfeed").prepend(itemEl);
+}});
+
 feeds.subscribe("private-$USER_ID", {tailSize: 10, onEvent: item => {
   const itemEl = document.createElement("li")
   itemEl.textContent = item.data;
-  notes.prepend(itemEl);
+  document.getElementById("notes").prepend(itemEl);
 }});
 </script>
 </head>
 
 <body>
   <div style="border-style: solid; width: 49%; float: left">
-    <form>
+    <div>
       <input id="newsfeed_data" type="text" name="item_data">
       <br/>
-      <button type="button" name="publish" onclick="publishToNewsfeed(this)">Publish!</button>
-    </form>
+      <button type="button" name="publishToNewsfeed" onclick="publishToNewsfeed(this)">Publish!</button>
+    </div>
     <div>
       <ul id="newsfeed">
       </ul>
     </div>
   </div>
   <div style="border-style: solid; width: 49%; float: right">
-    <form>
+    <div>
       <input id="data" type="text" name="item_data">
       <br/>
       <button type="button" name="publish" onclick="publishToNotes(this)">Publish!</button>
-    </form>
+    </div>
     <div>
       <ul id="notes">
       </ul>

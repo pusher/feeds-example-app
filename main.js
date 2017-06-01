@@ -12,7 +12,6 @@ const feeds = new Feeds({
 console.log(`Server token: ${feeds.token}`);
 
 function hasPermission(userId, feedId) {
-  console.log(`hasPermission(${userId}, ${feedId}) called`);
   if (userId === "admin") {
     return true;
   }
@@ -49,16 +48,16 @@ app.get("/notes/:user_id", (req, res) => {
 
 app.post("/newsfeed", (req, res) => {
   feeds.publish("newsfeed", [ req.body.item_data ]);
+  res.sendStatus(204);
 });
 
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
-  console.log(req.body);
   if (hasPermission(req.session.userId, feedId)) {
     feeds.publish(feedId, [ req.body.item_data ]);
-    res.sendStatus(204)
+    res.sendStatus(204);
   } else {
-    res.sendStatus(401)
+    res.sendStatus(401);
   }
 });
 
