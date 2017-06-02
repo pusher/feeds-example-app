@@ -136,6 +136,7 @@ var Subscription = function () {
         host = _ref.host,
         lastEventId = _ref.lastEventId,
         onEvent = _ref.onEvent,
+        onError = _ref.onError,
         tailSize = _ref.tailSize,
         token = _ref.token;
     classCallCheck(this, Subscription);
@@ -159,9 +160,7 @@ var Subscription = function () {
         _this3.request.setRequestHeader("Authorization", "Bearer " + token);
       }
       _this3.request.send();
-    }).catch(function (e) {
-      console.warn(e.message);
-    });
+    }).catch(onError);
   }
 
   createClass(Subscription, [{

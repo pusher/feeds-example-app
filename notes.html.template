@@ -6,25 +6,30 @@
   <title>1984 Notes</title>
   <script src="/pusher-feeds-client.js"></script>
   <script>
-function publishToNewsfeed(oFormElement) {
+function publishToNewsfeed() {
   const xhr = new XMLHttpRequest();
-  xhr.onload = () => console.log("published!");
   xhr.open("POST", "/newsfeed", true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(JSON.stringify({
-    item_data: document.getElementById("newsfeed_data").value
+    message: document.getElementById("newsfeed_message").value,
+    author: "$USER_ID"
   }));
+  document.getElementById("newsfeed_message").value = "";
 }
 
-function publishToNotes(oFormElement) {
+function publishToNotes() {
   const xhr = new XMLHttpRequest();
-  xhr.onload = () => console.log("published!");
-  xhr.open ("POST", "/notes/$NOTE_ID", true);
+  xhr.open("POST", "/notes/$NOTE_ID", true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(JSON.stringify({
-    item_data: document.getElementById("data").value
+    message: document.getElementById("note_message").value
   }));
-  return false;
+  document.getElementById("note_message").value = "";
+}
+
+function formatTime(timestamp) {
+  const t = new Date(timestamp * 1000);
+  return `${t.getHours()}:${t.getMinutes()}`;
 }
 
 const feeds = new PusherFeeds({
@@ -32,27 +37,40 @@ const feeds = new PusherFeeds({
   host: "api-staging-ceres.kube.pusherplatform.io"
 });
 
-feeds.subscribe("newsfeed", { tailSize: 10, onEvent: item => {
-  const itemEl = document.createElement("li")
-  itemEl.textContent = item.data;
-  document.getElementById("newsfeed").prepend(itemEl);
-}});
+feeds.subscribe("newsfeed", {
+  tailSize: 10,
+  onEvent: ({ created, data }) => {
+    const itemEl = document.createElement("li");
+    itemEl.textContent =
+      `${formatTime(created)}: ${data.message} – ${data.author}`;
+    document.getElementById("newsfeed").prepend(itemEl);
+  }
+});
 
-feeds.subscribe("private-$NOTE_ID", { tailSize: 10, onEvent: item => {
-  const itemEl = document.createElement("li")
-  itemEl.textContent = item.data;
-  document.getElementById("notes").prepend(itemEl);
-}});
+feeds.subscribe("private-$NOTE_ID", {
+  tailSize: 10,
+  onEvent: ({ created, data }) => {
+    const itemEl = document.createElement("li");
+    itemEl.textContent = `${formatTime(created)}: ${data.message}`;
+    document.getElementById("notes").prepend(itemEl);
+  },
+  onError: () => {
+    const errorEl = document.createElement("span");
+    errorEl.textContent = "You are not authorized to see these notes!";
+    document.getElementById("notes").replaceWith(errorEl);
+  }
+});
 </script>
 </head>
 
 <body>
   <div>Logged in as: $USER_ID</div>
   <div style="border-style: solid; width: 49%; float: left">
+    Public newsfeed
     <div>
-      <input id="newsfeed_data" type="text" name="item_data">
+      <input id="newsfeed_message" type="text">
       <br/>
-      <button type="button" name="publishToNewsfeed" onclick="publishToNewsfeed(this)">Publish!</button>
+      <button type="button" onclick="publishToNewsfeed()">Publish</button>
     </div>
     <div>
       <ul id="newsfeed">
@@ -60,10 +78,11 @@ feeds.subscribe("private-$NOTE_ID", { tailSize: 10, onEvent: item => {
     </div>
   </div>
   <div style="border-style: solid; width: 49%; float: right">
+    $NOTE_ID's private notes
     <div>
-      <input id="data" type="text" name="item_data">
+      <input id="note_message" type="text">
       <br/>
-      <button type="button" name="publish" onclick="publishToNotes(this)">Publish!</button>
+      <button type="button" onclick="publishToNotes()">Publish</button>
     </div>
     <div>
       <ul id="notes">

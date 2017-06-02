@@ -19,7 +19,6 @@ const app = express();
 app.use(express.static("static"));
 app.use(session({ secret: "HvCYzkbSjv3hNUf3fetPChO7DNxNPuOB" }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded()); // TODO can probably remove?
 
 app.get("/login", (req, res) => {
   req.session.userId = req.query.user_id;
@@ -37,14 +36,14 @@ app.get("/notes/:note_id", (req, res) => {
 });
 
 app.post("/newsfeed", (req, res) => {
-  feeds.publish("newsfeed", [ req.body.item_data ]);
+  feeds.publish("newsfeed", [ req.body ]);
   res.sendStatus(204);
 });
 
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
   if (hasPermission(req.session.userId, feedId)) {
-    feeds.publish(feedId, [ req.body.item_data ]);
+    feeds.publish(feedId, [ req.body ]);
     res.sendStatus(204);
   } else {
     res.sendStatus(401);
