@@ -524,6 +524,7 @@ var DEFAULT_CLUSTER = "api-ceres.kube.pusherplatform.io";
 var App = (function () {
     function App(options) {
         this.appId = options.appId;
+        this.authorizer = options.authorizer;
         this.client = options.client || new base_client_1.BaseClient({
             cluster: options.cluster || DEFAULT_CLUSTER,
             encrypted: options.encrypted
@@ -611,7 +612,6 @@ var ResumableSubscription = (function () {
         this.xhrSource = xhrSource;
         this.options = options;
         this.state = ResumableSubscriptionState.UNOPENED;
-        this.lastEventIdReceived = null;
         this.delayMillis = 0;
         this.assertState = assertState.bind(this, ResumableSubscriptionState);
         this.lastEventIdReceived = options.lastEventId;
@@ -635,10 +635,9 @@ var ResumableSubscription = (function () {
                 if (_this.options.onEvent) {
                     _this.options.onEvent(event);
                 }
-                console.assert(_this.lastEventIdReceived === null ||
+                console.assert(!_this.lastEventIdReceived ||
                     parseInt(event.eventId) > parseInt(_this.lastEventIdReceived), 'Expected the current event id to be larger than the previous one');
                 _this.lastEventIdReceived = event.eventId;
-                console.log("Set lastEventIdReceived to " + _this.lastEventIdReceived);
             },
             onEnd: function () {
                 _this.state = ResumableSubscriptionState.ENDED;
@@ -765,15 +764,15 @@ var feed_authorizer_1 = __webpack_require__(1);
 var Feed = (function () {
     function Feed(options) {
         this.servicePath = "services/feeds/v1/";
-        this.app = new pusher_platform_js_1.App(options);
+        this.feedIdRegex = /^[a-zA-Z0-9-]+$/;
+        if (!options.feedId.match(this.feedIdRegex)) {
+            throw new TypeError("Invalid feedId: " + options.feedId);
+        }
         this.feedId = options.feedId;
-        if (options.authorizer) {
-            // TODO provide authorizer as an option to the app constructor?
-            this.app.authorizer = options.authorizer;
+        if (!options.authorizer) {
+            options.authorizer = new feed_authorizer_1.default(options);
         }
-        else {
-            this.app.authorizer = new feed_authorizer_1.default(options);
-        }
+        this.app = new pusher_platform_js_1.App(options);
     }
     Object.defineProperty(Feed.prototype, "itemsPath", {
         get: function () {
