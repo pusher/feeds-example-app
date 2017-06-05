@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -705,16 +705,7 @@ exports.ResumableSubscription = ResumableSubscription;
 
 "use strict";
 
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var pusher_platform_js_1 = __webpack_require__(0);
 var FeedAuthorizer = (function () {
     function FeedAuthorizer(_a) {
         var feedId = _a.feedId, authEndpoint = _a.authEndpoint;
@@ -754,9 +745,28 @@ var FeedAuthorizer = (function () {
     };
     return FeedAuthorizer;
 }());
+exports.default = FeedAuthorizer;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var pusher_platform_js_1 = __webpack_require__(0);
+var feed_authorizer_1 = __webpack_require__(1);
 var Feed = (function () {
     function Feed(options) {
-        this.serviceName = "feeds";
         this.servicePath = "services/feeds/v1/";
         this.app = new pusher_platform_js_1.App(options);
         this.feedId = options.feedId;
@@ -765,9 +775,16 @@ var Feed = (function () {
             this.app.authorizer = options.authorizer;
         }
         else {
-            this.app.authorizer = new FeedAuthorizer(options);
+            this.app.authorizer = new feed_authorizer_1.default(options);
         }
     }
+    Object.defineProperty(Feed.prototype, "itemsPath", {
+        get: function () {
+            return this.servicePath + "/feeds/" + this.feedId + "/items";
+        },
+        enumerable: true,
+        configurable: true
+    });
     Feed.prototype.subscribe = function (options) {
         var queryString = "";
         if (options.tailSize) {
@@ -802,13 +819,6 @@ var Feed = (function () {
             }).catch(reject);
         });
     };
-    Object.defineProperty(Feed.prototype, "itemsPath", {
-        get: function () {
-            return this.servicePath + "/feeds/" + this.feedId + "/items";
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Feed;
 }());
 exports.Feed = Feed;
