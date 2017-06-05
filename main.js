@@ -3,7 +3,7 @@ const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 
-const Feeds = require("./pusher-feeds-server");
+const Feeds = require("pusher-feeds-server");
 
 const feeds = new Feeds({
   appId: "auth-example-app",
@@ -19,6 +19,7 @@ const app = express();
 app.use(express.static("static"));
 app.use(session({ secret: "HvCYzkbSjv3hNUf3fetPChO7DNxNPuOB" }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get("/login", (req, res) => {
   req.session.userId = req.query.user_id;
@@ -43,14 +44,14 @@ app.post("/newsfeed", (req, res) => {
 app.post("/notes/:user_id", (req, res) => {
   const feedId = `private-${req.params.user_id}`
   if (hasPermission(req.session.userId, feedId)) {
-    feeds.publish(feedId, [ req.body ]);
+    feeds.publish(feedId, [ req.body ]).catch(console.log);
     res.sendStatus(204);
   } else {
     res.sendStatus(401);
   }
 });
 
-app.get("/feeds/tokens", (req, res) => {
+app.post("/feeds/tokens", (req, res) => {
   feeds.authorize(req, res, {}, (feedId, type) => {
     return type === "READ" && hasPermission(req.session.userId, feedId);
   });
