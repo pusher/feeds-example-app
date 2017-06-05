@@ -706,6 +706,9 @@ exports.ResumableSubscription = ResumableSubscription;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+function requestBody(feedId) {
+    return "grant_type=client_credentials&feed_id=" + feedId + "&type=READ";
+}
 var FeedAuthorizer = (function () {
     function FeedAuthorizer(_a) {
         var feedId = _a.feedId, authEndpoint = _a.authEndpoint;
@@ -713,27 +716,21 @@ var FeedAuthorizer = (function () {
         this.feedId = feedId;
         this.authEndpoint = authEndpoint || this.defaultAuthEndpoint;
     }
-    Object.defineProperty(FeedAuthorizer.prototype, "authUrl", {
-        get: function () {
-            return this.authEndpoint + "?feed_id=" + this.feedId + "&type=READ";
-        },
-        enumerable: true,
-        configurable: true
-    });
     FeedAuthorizer.prototype.makeAuthRequest = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", _this.authUrl);
+            xhr.open("POST", _this.authEndpoint);
             xhr.addEventListener("load", function () {
                 if (xhr.status === 200) {
-                    resolve(JSON.parse(xhr.responseText).token);
+                    resolve(JSON.parse(xhr.responseText).access_token);
                 }
                 else {
                     reject(new Error("Couldn't get token from " + _this.authEndpoint + "; got " + xhr.status + " " + xhr.statusText + "."));
                 }
             });
-            xhr.send();
+            xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+            xhr.send(requestBody(_this.feedId));
         });
     };
     FeedAuthorizer.prototype.authorize = function () {
