@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>1984 Notes</title>
-  <script src="/pusher-feeds-client.js"></script>
+  <script src="../pusher-feeds-client.js"></script>
   <script>
 function publishToNewsfeed() {
   const xhr = new XMLHttpRequest();
@@ -32,14 +32,14 @@ function formatTime(timestamp) {
   return `${t.getHours()}:${t.getMinutes()}`;
 }
 
-const feeds = new PusherFeeds({
+const newsfeed = new PusherFeeds.Feed({
+  cluster: "api-staging-ceres.kube.pusherplatform.io",
   appId: "auth-example-app",
-  host: "api-staging-ceres.kube.pusherplatform.io"
+  feedId: "newsfeed",
 });
-
-feeds.subscribe("newsfeed", {
+newsfeed.subscribe({
   tailSize: 10,
-  onEvent: ({ created, data }) => {
+  onEvent: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent =
       `${formatTime(created)}: ${data.message} – ${data.author}`;
@@ -47,9 +47,14 @@ feeds.subscribe("newsfeed", {
   }
 });
 
-feeds.subscribe("private-$NOTE_ID", {
+const notes = new PusherFeeds.Feed({
+  cluster: "api-staging-ceres.kube.pusherplatform.io",
+  appId: "auth-example-app",
+  feedId: "private-$NOTE_ID",
+});
+notes.subscribe({
   tailSize: 10,
-  onEvent: ({ created, data }) => {
+  onEvent: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent = `${formatTime(created)}: ${data.message}`;
     document.getElementById("notes").prepend(itemEl);
