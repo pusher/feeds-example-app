@@ -7,6 +7,7 @@
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "jsonwebtoken": "^7.4.1",
+    "pusher-feeds-server": "https://github.com/pusher/feeds-server-node.git#use_pusher_platform_nodejs",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   }
