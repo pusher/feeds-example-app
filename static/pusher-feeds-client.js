@@ -708,13 +708,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function requestBody(feedId) {
     return "grant_type=client_credentials&feed_id=" + feedId + "&type=READ";
 }
+function now() {
+    return Math.floor(Date.now() / 1000);
+}
 var FeedAuthorizer = (function () {
     function FeedAuthorizer(_a) {
         var feedId = _a.feedId, authEndpoint = _a.authEndpoint;
+        this.cachedToken = null;
+        this.cacheExpiryTolerance = 60;
         this.defaultAuthEndpoint = "/feeds/tokens";
         this.feedId = feedId;
         this.authEndpoint = authEndpoint || this.defaultAuthEndpoint;
     }
+    FeedAuthorizer.prototype.authorize = function () {
+        var _this = this;
+        if (this.feedId.startsWith("private-") && this.cacheIsStale) {
+            return this.makeAuthRequest().then(function (responseBody) {
+                _this.cache(responseBody.access_token, responseBody.expires_in);
+                return _this.cachedToken;
+            });
+        }
+        return Promise.resolve(this.cachedToken); // null if feed is public
+    };
+    Object.defineProperty(FeedAuthorizer.prototype, "cacheIsStale", {
+        get: function () {
+            return !this.cachedToken || now() > this.cacheValidUntil;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FeedAuthorizer.prototype.cache = function (token, expiresIn) {
+        this.cachedToken = token;
+        this.cacheValidUntil = now() + expiresIn - this.cacheExpiryTolerance;
+    };
     FeedAuthorizer.prototype.makeAuthRequest = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -722,7 +748,7 @@ var FeedAuthorizer = (function () {
             xhr.open("POST", _this.authEndpoint);
             xhr.addEventListener("load", function () {
                 if (xhr.status === 200) {
-                    resolve(JSON.parse(xhr.responseText).access_token);
+                    resolve(JSON.parse(xhr.responseText));
                 }
                 else {
                     reject(new Error("Couldn't get token from " + _this.authEndpoint + "; got " + xhr.status + " " + xhr.statusText + "."));
@@ -731,13 +757,6 @@ var FeedAuthorizer = (function () {
             xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
             xhr.send(requestBody(_this.feedId));
         });
-    };
-    FeedAuthorizer.prototype.authorize = function () {
-        // TODO caching
-        if (this.feedId.startsWith("private-")) {
-            return this.makeAuthRequest();
-        }
-        return Promise.resolve(null);
     };
     return FeedAuthorizer;
 }());
