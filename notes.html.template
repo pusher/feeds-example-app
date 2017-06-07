@@ -32,12 +32,13 @@ function formatTime(timestamp) {
   return `${t.getHours()}:${t.getMinutes()}`;
 }
 
-const newsfeed = new PusherFeeds.Feed({
+const pusherFeeds = new PusherFeeds({
   cluster: "api-staging-ceres.kube.pusherplatform.io",
-  appId: "auth-example-app",
-  feedId: "newsfeed",
+  serviceId: "auth-example-app",
 });
-newsfeed.subscribe({
+pusherFeeds.feed({
+  feedId: "newsfeed",
+}).subscribe({
   tailSize: 10,
   onEvent: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
@@ -47,12 +48,9 @@ newsfeed.subscribe({
   }
 });
 
-const notes = new PusherFeeds.Feed({
-  cluster: "api-staging-ceres.kube.pusherplatform.io",
-  appId: "auth-example-app",
+pusherFeeds.feed({
   feedId: "private-$NOTE_ID",
-});
-notes.subscribe({
+}).subscribe({
   tailSize: 10,
   onEvent: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
