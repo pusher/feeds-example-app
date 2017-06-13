@@ -36,11 +36,9 @@ const pusherFeeds = new PusherFeeds({
   cluster: "api-staging-ceres.kube.pusherplatform.io",
   serviceId: "auth-example-app",
 });
-pusherFeeds.feed({
-  feedId: "newsfeed",
-}).subscribe({
+pusherFeeds.feed("newsfeed").subscribe({
   tailSize: 10,
-  onEvent: ({ body: { created, data } }) => {
+  onItem: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent =
       `${formatTime(created)}: ${data.message} – ${data.author}`;
@@ -48,11 +46,9 @@ pusherFeeds.feed({
   }
 });
 
-pusherFeeds.feed({
-  feedId: "private-$NOTE_ID",
-}).subscribe({
+pusherFeeds.feed("private-$NOTE_ID").subscribe({
   tailSize: 10,
-  onEvent: ({ body: { created, data } }) => {
+  onItem: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent = `${formatTime(created)}: ${data.message}`;
     document.getElementById("notes").prepend(itemEl);

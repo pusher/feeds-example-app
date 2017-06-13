@@ -253,6 +253,12 @@ extsprintf@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.0.2.tgz#e1080e0658e300b06294990cc70e1502235fd550"
 
+"feeds-client-js@https://github.com/pusher/feeds-client-js":
+  version "0.1.0"
+  resolved "https://github.com/pusher/feeds-client-js#cc720bf6731a927e3d4223c39c801a10607c5781"
+  dependencies:
+    pusher-platform-js "git+https://github.com/pusher/pusher-platform-js"
+
 finalhandler@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/finalhandler/-/finalhandler-1.0.3.tgz#ef47e77950e999780e86022a560e3217e0d0cc89"
@@ -429,6 +435,10 @@ jws@^3.1.4:
     jwa "^1.1.4"
     safe-buffer "^5.0.1"
 
+jwt-simple@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/jwt-simple/-/jwt-simple-0.5.1.tgz#79ea01891b61de6b68e13e67c0b4b5bda937b294"
+
 lodash.once@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
@@ -520,6 +530,12 @@ punycode@^1.4.1:
     pusher-platform "https://github.com/pusher/pusher-platform-nodejs.git#allow_custom_claims"
     request "^2.81.0"
     request-promise-native "^1.0.3"
+
+"pusher-platform-js@git+https://github.com/pusher/pusher-platform-js":
+  version "0.1.0"
+  resolved "git+https://github.com/pusher/pusher-platform-js#1078fa8e8988db9d6a22a63cd40f9591dc950696"
+  dependencies:
+    jwt-simple "^0.5.1"
 
 "pusher-platform@https://github.com/pusher/pusher-platform-nodejs.git#allow_custom_claims":
   version "0.2.0"
