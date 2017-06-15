@@ -1,13 +1,30 @@
 {
-  "name": "feeds-auth-example-app",
+  "name": "pusher-feeds-server",
   "version": "0.1.0",
   "license": "MIT",
+  "scripts": {
+    "install-pkg": "if type yarn &> /dev/null; then yarn; else npm i; fi",
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon main.js --exec babel-node --presets es2015 stage-2 --plugins transform-class-properties transform-flow-strip-types",
+    "postinstall": "npm run build-pusher-feeds-server && npm run build-feeds-client-js && npm run build-pusher-platform",
+    "build-pusher-feeds-server": "cd node_modules/pusher-feeds-server; npm run build",
+    "build-feeds-client-js": "cd node_modules/feeds-client-js; cp target/pusher-feeds-client* ../../static",
+    "build-pusher-platform": "cd node_modules/build-pusher-platform; tsc"
+  },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
-    "jsonwebtoken": "^7.4.1",
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.4"
+    "feeds-client-js": "https://github.com/pusher/feeds-client-js.git#master",
+    "pusher-feeds-server": "https://github.com/pusher/feeds-server-node.git#improve_development"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "flow-bin": "^0.47.0",
+    "nodemon": "^1.11.0"
   }
 }

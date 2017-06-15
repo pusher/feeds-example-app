@@ -4,9 +4,11 @@
 <head>
   <meta charset="utf-8">
   <title>1984 Notes</title>
-  <script src="/pusher-feeds-client.js"></script>
+  <script src="/client.js"></script>
   <script>
 function publishToNewsfeed() {
+  const e = window.event.preventDefault();
+
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "/newsfeed", true);
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -18,6 +20,8 @@ function publishToNewsfeed() {
 }
 
 function publishToNotes() {
+  window.event.preventDefault();
+  
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "/notes/$NOTE_ID", true);
   xhr.setRequestHeader("Content-Type", "application/json");
@@ -32,14 +36,13 @@ function formatTime(timestamp) {
   return `${t.getHours()}:${t.getMinutes()}`;
 }
 
-const newsfeed = new PusherFeeds.Feed({
+const pusherFeeds = new PusherFeeds({
   cluster: "api-staging-ceres.kube.pusherplatform.io",
-  appId: "auth-example-app",
-  feedId: "newsfeed",
+  serviceId: "auth-example-app",
 });
-newsfeed.subscribe({
+pusherFeeds.feed("newsfeed").subscribe({
   tailSize: 10,
-  onEvent: ({ body: { created, data } }) => {
+  onItem: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent =
       `${formatTime(created)}: ${data.message} – ${data.author}`;
@@ -47,14 +50,9 @@ newsfeed.subscribe({
   }
 });
 
-const notes = new PusherFeeds.Feed({
-  cluster: "api-staging-ceres.kube.pusherplatform.io",
-  appId: "auth-example-app",
-  feedId: "private-$NOTE_ID",
-});
-notes.subscribe({
+pusherFeeds.feed("private-$NOTE_ID").subscribe({
   tailSize: 10,
-  onEvent: ({ body: { created, data } }) => {
+  onItem: ({ body: { created, data } }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent = `${formatTime(created)}: ${data.message}`;
     document.getElementById("notes").prepend(itemEl);
@@ -73,9 +71,11 @@ notes.subscribe({
   <div style="border-style: solid; width: 49%; float: left">
     Public newsfeed
     <div>
-      <input id="newsfeed_message" type="text">
-      <br/>
-      <button type="button" onclick="publishToNewsfeed()">Publish</button>
+      <form onsubmit="publishToNewsfeed()">
+        <input id="newsfeed_message" type="text">
+        <br/>
+        <button type="submit">Publish</button>
+      </form>
     </div>
     <div>
       <ul id="newsfeed">
@@ -85,9 +85,11 @@ notes.subscribe({
   <div style="border-style: solid; width: 49%; float: right">
     $NOTE_ID's private notes
     <div>
-      <input id="note_message" type="text">
-      <br/>
-      <button type="button" onclick="publishToNotes()">Publish</button>
+      <form onsubmit="publishToNotes()">
+        <input id="note_message" type="text">
+        <br/>
+        <button type="submit">Publish</button>
+      </form>
     </div>
     <div>
       <ul id="notes">
