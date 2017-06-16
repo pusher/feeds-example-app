@@ -8,7 +8,7 @@
     "postinstall": "npm run build-pusher-feeds-server && npm run build-feeds-client-js && npm run build-pusher-platform",
     "build-pusher-feeds-server": "cd node_modules/pusher-feeds-server; npm run build",
     "build-feeds-client-js": "cd node_modules/feeds-client-js; cp target/pusher-feeds-client* ../../static",
-    "build-pusher-platform": "cd node_modules/build-pusher-platform; tsc"
+    "build-pusher-platform": "cd node_modules/pusher-platform; tsc"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -25,6 +25,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "flow-bin": "^0.47.0",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "typescript": "^2.1.0"
   }
 }
