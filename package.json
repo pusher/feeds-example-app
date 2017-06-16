@@ -5,16 +5,14 @@
   "scripts": {
     "install-pkg": "if type yarn &> /dev/null; then yarn; else npm i; fi",
     "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon main.js --exec babel-node --presets es2015 stage-2 --plugins transform-class-properties transform-flow-strip-types",
-    "postinstall": "npm run build-pusher-feeds-server && npm run build-feeds-client-js && npm run build-pusher-platform",
+    "postinstall": "npm run build-pusher-feeds-server && npm run build-pusher-platform",
     "build-pusher-feeds-server": "cd node_modules/pusher-feeds-server; npm run build",
-    "build-feeds-client-js": "cd node_modules/feeds-client-js; cp target/pusher-feeds-client* ../../static",
     "build-pusher-platform": "cd node_modules/pusher-platform; tsc"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
-    "feeds-client-js": "https://github.com/pusher/feeds-client-js.git#master",
     "pusher-feeds-server": "https://github.com/pusher/feeds-server-node.git#improve_development"
   },
   "devDependencies": {
