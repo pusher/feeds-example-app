@@ -1120,12 +1120,6 @@ extsprintf@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.0.2.tgz#e1080e0658e300b06294990cc70e1502235fd550"
 
-"feeds-client-js@https://github.com/pusher/feeds-client-js.git#master":
-  version "0.1.0"
-  resolved "https://github.com/pusher/feeds-client-js.git#490e2b280db7595740d5f97db1e4f86a84c96c0f"
-  dependencies:
-    pusher-platform-js "git+https://github.com/pusher/pusher-platform-js"
-
 filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
@@ -1574,10 +1568,6 @@ jws@^3.1.4:
     jwa "^1.1.4"
     safe-buffer "^5.0.1"
 
-jwt-simple@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/jwt-simple/-/jwt-simple-0.5.1.tgz#79ea01891b61de6b68e13e67c0b4b5bda937b294"
-
 kind-of@^3.0.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -1982,12 +1972,6 @@ punycode@^1.4.1:
   dependencies:
     jsonwebtoken "^7.4.1"
     pusher-platform "https://github.com/pusher/pusher-platform-nodejs.git#authenticate_synchronously"
-
-"pusher-platform-js@git+https://github.com/pusher/pusher-platform-js":
-  version "0.3.0"
-  resolved "git+https://github.com/pusher/pusher-platform-js#9ec46ebd2c15172e6813bc0f6a8543f96e6ba09e"
-  dependencies:
-    jwt-simple "^0.5.1"
 
 "pusher-platform@https://github.com/pusher/pusher-platform-nodejs.git#authenticate_synchronously":
   version "0.2.0"
