@@ -5,9 +5,9 @@ import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 
-import Service from 'pusher-feeds-server';
+import PusherFeeds from 'pusher-feeds-server';
 
-const feeds = new Service({
+const pusherFeeds = new PusherFeeds({
   serviceId: 'auth-example-app',
   serviceKey: 'the-id-bit:the-secret-bit',
   host: 'api-staging-ceres.kube.pusherplatform.io'
@@ -62,7 +62,7 @@ app.post('/notes/:user_id', (req, res) => {
     return res.sendStatus(401);
   }
 
-  feeds
+  pusherFeeds
     .publish(feedId, req.body)
     .then(() => res.sendStatus(204))
     .catch(err => res.status(400).send(err));
@@ -71,7 +71,7 @@ app.post('/notes/:user_id', (req, res) => {
 // Publis data into public feed
 // Does not require any authe
 app.post('/newsfeed', (req, res) => {
-  feeds
+  pusherFeeds
     .publish('newsfeed', req.body)
     .then(data => res.sendStatus(204))
     .catch(err => res.status(400).send(err));
@@ -80,7 +80,7 @@ app.post('/newsfeed', (req, res) => {
 app.post('/feeds/tokens', (req, res) => {
   const validateRequest = (action, feedId) => action === 'READ' && hasPermission(req.session.userId, feedId);
 
-  feeds.authorizeFeed(req, validateRequest)
+  pusherFeeds.authorizeFeed(req, validateRequest)
     .then(data => res.send(data))
     .catch(err => {
       res.status(400).send(`${err.name}: ${err.message}`) 
