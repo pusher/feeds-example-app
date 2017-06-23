@@ -19,7 +19,6 @@ function hasPermission(userId, feedId) {
 
 const app = express();
 
-app.use(express.static(joinPath(process.cwd(), 'static')));
 app.use(session({ secret: 'HvCYzkbSjv3hNUf3fetPChO7DNxNPuOB' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
