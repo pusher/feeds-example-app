@@ -10,7 +10,7 @@ import Service from 'pusher-feeds-server';
 const feeds = new Service({
   serviceId: 'auth-example-app',
   serviceKey: 'the-id-bit:the-secret-bit',
-  host: 'api-staging-ceres.kube.pusherplatform.io'
+  cluster: 'api-staging-ceres.kube.pusherplatform.io'
 });
 
 function hasPermission(userId, feedId) {
@@ -81,7 +81,7 @@ app.post('/newsfeed', (req, res) => {
 app.post('/feeds/tokens', (req, res) => {
   const validateRequest = (action, feedId) => action === 'READ' && hasPermission(req.session.userId, feedId);
 
-  feeds.authorizeFeed(req, validateRequest)
+  feeds.authorizeFeed(req.body, validateRequest)
     .then(data => res.send(data))
     .catch(err => {
       res.status(400).send(`${err.name}: ${err.message}`) 
