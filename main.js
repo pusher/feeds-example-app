@@ -5,9 +5,9 @@ import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 
-import Service from 'pusher-feeds-server';
+import Feeds from 'pusher-feeds-server';
 
-const feeds = new Service({
+const feeds = new Feeds({
   serviceId: 'auth-example-app',
   serviceKey: 'the-id-bit:the-secret-bit',
   cluster: 'api-staging-ceres.kube.pusherplatform.io'
