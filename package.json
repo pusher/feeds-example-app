@@ -4,14 +4,13 @@
   "license": "MIT",
   "scripts": {
     "install-pkg": "if type yarn &> /dev/null; then yarn; else npm i; fi",
-    "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon main.js --exec babel-node --presets es2015 stage-2 --plugins transform-class-properties transform-flow-strip-types"
+    "start": "nodemon main.js --exec babel-node --presets es2015 stage-2 --plugins transform-class-properties transform-flow-strip-types"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
-    "pusher-feeds-client": "^0.2.0",
-    "pusher-feeds-server": "^0.2.0"
+    "pusher-feeds-server": "^0.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

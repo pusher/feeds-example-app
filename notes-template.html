@@ -38,7 +38,7 @@ function formatTime(timestamp) {
 }
 
 const feeds = new Feeds({
-  cluster: "api-staging-ceres.kube.pusherplatform.io",
+  cluster: "api-ceres.pusherplatform.io",
   serviceId: "auth-example-app",
 });
 feeds.feed("newsfeed").subscribe({
