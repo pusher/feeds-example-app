@@ -9,3 +9,5 @@ $ yarn
 ```
 $ yarn start
 ```
+
+You can find a deployment of this app on heroku: https://feeds-example-app.herokuapp.com/
