@@ -8,8 +8,8 @@ import bodyParser from 'body-parser';
 import Service from 'pusher-feeds-server';
 
 const feeds = new Service({
-  serviceId: 'auth-example-app',
-  serviceKey: 'the-id-bit:the-secret-bit'
+  serviceId: process.env.SERVICE_ID,
+  serviceKey: process.env.SERVICE_KEY
 });
 
 function hasPermission(userId, feedId) {
@@ -49,6 +49,7 @@ app.get('/notes/:note_id', (req, res) => {
       data
         .replace(/\$NOTE_ID/g, req.params.note_id)
         .replace(/\$USER_ID/g, req.session.userId)
+        .replace(/\$SERVICE_ID/g, process.env.SERVICE_ID)
     );
   });
 });

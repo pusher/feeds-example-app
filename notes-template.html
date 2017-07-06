@@ -39,7 +39,7 @@ function formatTime(timestamp) {
 
 const feeds = new Feeds({
   cluster: "api-ceres.pusherplatform.io",
-  serviceId: "auth-example-app",
+  serviceId: "$SERVICE_ID",
 });
 feeds.feed("newsfeed").subscribe({
   tailSize: 10,
