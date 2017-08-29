@@ -2,7 +2,7 @@ Example of usage https://github.com/pusher/feeds-client-js and https://github.co
 
 Currently just fetching packages from github and build them in postinstall script.
 
-You must set the environment variables `SERVICE_ID` and `SERVICE_KEY`.
+You must set the environment variables `INSTANCE_ID` and `KEY`.
 
 ```
 $ yarn

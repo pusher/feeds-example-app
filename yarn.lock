@@ -2,24 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/es6-promise@0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/es6-promise/-/es6-promise-0.0.32.tgz#3bcf44fb1e429f3df76188c8c6d874463ba371fd"
-
-"@types/extend@^2.0.0":
-  version "2.0.30"
-  resolved "https://registry.yarnpkg.com/@types/extend/-/extend-2.0.30.tgz#58cc93f621d0a358d3fec9bd6e739bc60ec7e275"
-
-"@types/jsonwebtoken@^7.2.0":
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.1.tgz#44a0282b48d242d0760eab0ce6cf570a62eabf96"
-  dependencies:
-    "@types/node" "*"
-
-"@types/node@*":
-  version "8.0.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.7.tgz#fb0ad04b5b6f6eabe0372a32a8f1fbba5c130cae"
-
 abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
@@ -1960,23 +1942,22 @@ punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
-pusher-feeds-server@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/pusher-feeds-server/-/pusher-feeds-server-0.2.1.tgz#2f03e5301b560aa1bf6a3d421ce34471d47fa6ff"
+pusher-feeds-server@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/pusher-feeds-server/-/pusher-feeds-server-0.5.0.tgz#719ff7c5f942098b26f95ebb64b4e04966278fb5"
   dependencies:
     babel-runtime "^6.23.0"
     jsonwebtoken "^7.4.1"
-    pusher-platform-node "^0.3.0"
+    pusher-platform-node "^0.8.2"
 
-pusher-platform-node@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/pusher-platform-node/-/pusher-platform-node-0.3.0.tgz#637b454d7550e86bf45daececf9d4802b945de95"
+pusher-platform-node@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/pusher-platform-node/-/pusher-platform-node-0.8.2.tgz#c0ceb6e43ebeeb3ea5a7558bad0ad9028dcfa6a8"
   dependencies:
-    "@types/es6-promise" "0.0.32"
-    "@types/extend" "^2.0.0"
-    "@types/jsonwebtoken" "^7.2.0"
+    body-parser "^1.17.2"
     extend "^2.0.1"
     jsonwebtoken "^7.4.1"
+    request "^2.81.0"
 
 qs@6.4.0, qs@~6.4.0:
   version "6.4.0"

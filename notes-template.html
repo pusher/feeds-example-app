@@ -38,12 +38,11 @@ function formatTime(timestamp) {
 }
 
 const feeds = new Feeds({
-  cluster: "api-ceres.pusherplatform.io",
-  serviceId: "$SERVICE_ID",
+  instanceId: "$INSTANCE_ID",
 });
 feeds.feed("newsfeed").subscribe({
-  tailSize: 10,
-  onItem: ({ body: { created, data } }) => {
+  previousItems: 10,
+  onItem: ({ created, data }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent =
       `${formatTime(created)}: ${data.message} – ${data.author}`;
@@ -52,8 +51,8 @@ feeds.feed("newsfeed").subscribe({
 });
 
 feeds.feed("private-$NOTE_ID").subscribe({
-  tailSize: 10,
-  onItem: ({ body: { created, data } }) => {
+  previousItems: 10,
+  onItem: ({ created, data }) => {
     const itemEl = document.createElement("li");
     itemEl.textContent = `${formatTime(created)}: ${data.message}`;
     document.getElementById("notes").prepend(itemEl);
